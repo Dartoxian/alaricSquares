@@ -39,15 +39,18 @@ public class Dictionary implements Iterable<char[]>{
             .build();
 
     private Set<char[]> words;
+    private Set<String> wordsAsStrings;
     private char[] longestWord;
 
     public Dictionary(Collection<char[]> words) {
         this.words = Sets.newHashSet(words);
+        this.wordsAsStrings = Sets.newHashSet();
         longestWord = new char[0];
         for (char[] word : words) {
             if (longestWord.length < word.length) {
                 longestWord = word;
             }
+            wordsAsStrings.add(new String(word));
         }
     }
 
@@ -106,4 +109,19 @@ public class Dictionary implements Iterable<char[]>{
         return totalCharactersInDictionary;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Dictionary chars = (Dictionary) o;
+
+        return wordsAsStrings != null ? wordsAsStrings.equals(chars.wordsAsStrings) : chars.wordsAsStrings == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return wordsAsStrings != null ? wordsAsStrings.hashCode() : 0;
+    }
 }

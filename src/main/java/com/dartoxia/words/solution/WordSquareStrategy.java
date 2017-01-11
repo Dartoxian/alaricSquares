@@ -20,6 +20,7 @@ public class WordSquareStrategy {
     private int height;
     private List<char[]> dictionary;
     private PriorityQueue<PartialSolution> partialSolutions;
+    private Set<PartialSolution> solutionsQueued;
     private static final PartialSolutionEvaluator[] solutionEvaluators = new PartialSolutionEvaluator[] {
             ImpossibleScoreEvaluator.INSTANCE,
             TooManyDistinctCharactersEvaluator.INSTANCE
@@ -36,12 +37,18 @@ public class WordSquareStrategy {
                 return o1.score() - o2.score();
             }
         });
-        partialSolutions.add(new PartialSolution(new WordSquare(width, height), new Dictionary(dictionary)));
+        PartialSolution initialSolution = new PartialSolution(new WordSquare(width, height), new Dictionary(dictionary));
+        solutionsQueued = Sets.newHashSet(initialSolution);
+        partialSolutions.add(initialSolution);
     }
 
     public WordSquare findSolution() {
         while (partialSolutions.size() > 0 && partialSolutions.peek().score() > 0) {
-            partialSolutions.addAll(workOnPartialSquare(partialSolutions.poll()));
+            PartialSolution solutionToWorkOn = partialSolutions.poll();
+            solutionsQueued.remove(solutionToWorkOn);
+            Set<PartialSolution> nextSolutions = workOnPartialSquare(solutionToWorkOn);
+            partialSolutions.addAll(Sets.difference(nextSolutions, solutionsQueued));
+            solutionsQueued.addAll(nextSolutions);
         }
 
         if (partialSolutions.size() > 0) {
@@ -63,8 +70,8 @@ public class WordSquareStrategy {
      * @param partialSolution
      * @return
      */
-    public List<PartialSolution> workOnPartialSquare(PartialSolution partialSolution) {
-        List<PartialSolution> result = Lists.newArrayList();
+    public Set<PartialSolution> workOnPartialSquare(PartialSolution partialSolution) {
+        Set<PartialSolution> result = Sets.newHashSet();
 
         char[] word = partialSolution.remainingDictionary.getLongestWord();
         Set<WordSquare> partialSolutionsForWord = Sets.newHashSet();

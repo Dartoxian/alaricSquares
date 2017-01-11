@@ -78,4 +78,23 @@ public class PartialSolution {
         }
         return remainingBlanksCache;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PartialSolution that = (PartialSolution) o;
+
+        if (wordSquare != null ? !wordSquare.equals(that.wordSquare) : that.wordSquare != null) return false;
+        return remainingDictionary != null ? remainingDictionary.equals(that.remainingDictionary) : that.remainingDictionary == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = wordSquare != null ? wordSquare.hashCode() : 0;
+        result = 31 * result + (remainingDictionary != null ? remainingDictionary.hashCode() : 0);
+        return result;
+    }
 }
