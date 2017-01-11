@@ -73,4 +73,37 @@ public class Dictionary implements Iterable<char[]>{
     public char[] getLongestWord() {
         return longestWord;
     }
+
+    private int distinctCharactersInDictionary = -1;
+    private int totalCharactersInDictionary = -1;
+    private Set<Character> seenCharacters = null;
+    private void initialiseStats() {
+        if (distinctCharactersInDictionary < 0) {
+            totalCharactersInDictionary = 0;
+            seenCharacters = Sets.newHashSet();
+            for (char[] word : words) {
+                for (Character w : word) {
+                    seenCharacters.add(w);
+                }
+                totalCharactersInDictionary += word.length;
+            }
+            distinctCharactersInDictionary = seenCharacters.size();
+        }
+    }
+
+    public int getDistinctCharacterCountInDictionary() {
+        initialiseStats();
+        return distinctCharactersInDictionary;
+    }
+
+    public Set<Character> getDistinctCharactersInDictionary() {
+        initialiseStats();
+        return seenCharacters;
+    }
+
+    public int getTotalCharactersInDictionary() {
+        initialiseStats();
+        return totalCharactersInDictionary;
+    }
+
 }

@@ -1,7 +1,10 @@
 package com.dartoxia.words;
 
+import com.google.common.collect.Sets;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents one of Alaric's word squares
@@ -144,6 +147,19 @@ public class WordSquare {
                     (x > 0 && isWordPresentFrom(word, index + 1, x -1, y));
         }
         return false;
+    }
+
+    public Set<Character> getDistinctCharacters() {
+        Set<Character> result = Sets.newHashSet();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; i++) {
+                if (grid[i][j] != null) {
+                    result.add(grid[i][j]);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override

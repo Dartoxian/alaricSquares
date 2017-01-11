@@ -61,24 +61,21 @@ public class PartialSolution {
     }
 
     private int getRemainingCharsToPlace() {
-        // Get the total number of characters still to place
-        int charsRemain = 0;
-        for (char[] word: remainingDictionary) {
-            charsRemain += word.length;
-        }
-
-        return charsRemain;
+        return remainingDictionary.getTotalCharactersInDictionary();
     }
 
-    private int getRemainingBlankSquares() {
-        int remainingBlanks = 0;
-        for (int i = 0; i < wordSquare.getWidth(); i++) {
-            for (int j = 0; j <wordSquare.getHeight(); j++) {
-                if (wordSquare.getCell(i, j) == null) {
-                    remainingBlanks++;
+    private int remainingBlanksCache = -1;
+    public int getRemainingBlankSquares() {
+        if (remainingBlanksCache < 0) {
+            remainingBlanksCache = 0;
+            for (int i = 0; i < wordSquare.getWidth(); i++) {
+                for (int j = 0; j < wordSquare.getHeight(); j++) {
+                    if (wordSquare.getCell(i, j) == null) {
+                        remainingBlanksCache++;
+                    }
                 }
             }
         }
-        return remainingBlanks;
+        return remainingBlanksCache;
     }
 }

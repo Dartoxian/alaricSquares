@@ -2,6 +2,8 @@ package com.dartoxia.words.solution;
 
 import com.dartoxia.words.Dictionary;
 import com.dartoxia.words.WordSquare;
+import com.dartoxia.words.solution.evaluators.ImpossibleScoreEvaluator;
+import com.dartoxia.words.solution.evaluators.TooManyDistinctCharactersEvaluator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -18,6 +20,10 @@ public class WordSquareStrategy {
     private int height;
     private List<char[]> dictionary;
     private PriorityQueue<PartialSolution> partialSolutions;
+    private static final PartialSolutionEvaluator[] solutionEvaluators = new PartialSolutionEvaluator[] {
+            ImpossibleScoreEvaluator.INSTANCE,
+            TooManyDistinctCharactersEvaluator.INSTANCE
+    };
 
     public WordSquareStrategy(int width, int height, List<char[]> dictionary) {
         this.width = width;
@@ -70,10 +76,22 @@ public class WordSquareStrategy {
 
         Dictionary dictionaryWithoutWord = partialSolution.remainingDictionary.getDictionaryWithoutWords(Sets.newHashSet(word));
         for (WordSquare ws : partialSolutionsForWord) {
-            result.add(new PartialSolution(ws, dictionaryWithoutWord));
+            PartialSolution ps = new PartialSolution(ws, dictionaryWithoutWord);
+            if (partialSolutionCouldWork(ps)) {
+                result.add(ps);
+            }
         }
 
         return result;
+    }
+
+    protected static boolean partialSolutionCouldWork(PartialSolution ps) {
+        for (PartialSolutionEvaluator pse: solutionEvaluators) {
+            if (! pse.couldWork(ps)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected static Set<WordSquare> tryToPlaceWord(WordSquare wordSquare, char[] word, int index, int x, int y) {

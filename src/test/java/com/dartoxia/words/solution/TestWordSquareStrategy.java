@@ -38,10 +38,13 @@ public class TestWordSquareStrategy {
         assertTrue(result == null);
     }
 
-    //@Test
+    /**
+     * This grid is too small for the greek alphabet
+     */
+    @Test
     public void testGreekAlphabet() {
-        WordSquare result = new WordSquareStrategy(9,7, Dictionary.greekAlphabet).findSolution();
+        WordSquare result = new WordSquareStrategy(5,5, Dictionary.greekAlphabet).findSolution();
 
-        assertTrue(result != null);
+        assertTrue(result == null);
     }
 }
