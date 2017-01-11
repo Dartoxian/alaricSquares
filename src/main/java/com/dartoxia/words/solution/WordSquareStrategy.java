@@ -3,6 +3,7 @@ package com.dartoxia.words.solution;
 import com.dartoxia.words.Dictionary;
 import com.dartoxia.words.WordSquare;
 import com.dartoxia.words.solution.evaluators.ImpossibleScoreEvaluator;
+import com.dartoxia.words.solution.evaluators.KnownImpossiblePartialSolutionEvaluator;
 import com.dartoxia.words.solution.evaluators.TooManyDistinctCharactersEvaluator;
 import com.google.common.collect.Sets;
 
@@ -23,10 +24,11 @@ public class WordSquareStrategy {
     private List<char[]> dictionary;
     private PriorityQueue<PartialSolution> partialSolutions;
     private Set<PartialSolution> solutionsQueued;
-    private Set<String> exploredStates;
-    private static final PartialSolutionEvaluator[] solutionEvaluators = new PartialSolutionEvaluator[] {
+    private Set<String> exploredStates = Sets.newHashSet();
+    private final PartialSolutionEvaluator[] solutionEvaluators = new PartialSolutionEvaluator[] {
             ImpossibleScoreEvaluator.INSTANCE,
-            TooManyDistinctCharactersEvaluator.INSTANCE
+            TooManyDistinctCharactersEvaluator.INSTANCE,
+            new KnownImpossiblePartialSolutionEvaluator(exploredStates)
     };
 
     public WordSquareStrategy(int width, int height, List<char[]> dictionary) {
@@ -100,7 +102,7 @@ public class WordSquareStrategy {
         return result;
     }
 
-    protected static boolean partialSolutionCouldWork(PartialSolution ps) {
+    protected boolean partialSolutionCouldWork(PartialSolution ps) {
         for (PartialSolutionEvaluator pse: solutionEvaluators) {
             if (! pse.couldWork(ps)) {
                 return false;
