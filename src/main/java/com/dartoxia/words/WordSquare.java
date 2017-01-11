@@ -1,5 +1,6 @@
 package com.dartoxia.words;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,6 +29,23 @@ public class WordSquare {
         this.width = width;
         this.height = height;
         this.grid = new Character[width][height];
+    }
+
+    protected WordSquare(int width, int height, Character[][] grid) {
+        this.width = width;
+        this.height = height;
+        this.grid = grid;
+    }
+
+    public WordSquare makeCopy() {
+        Character[][] gridClone = new Character[width][height];
+        for (int i = 0; i<width; i++) {
+            for (int j = 0; j<height; j++) {
+                gridClone[i][j] = grid[i][j];
+            }
+        }
+
+        return new WordSquare(width, height, gridClone);
     }
 
     public void setGrid(char[][] grid) {
@@ -61,6 +79,18 @@ public class WordSquare {
 
     public void setCell(int x, int y, Character value) {
         grid[x][y] = value;
+    }
+
+    public Character getCell(int x, int y) {
+        return grid[x][y];
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     /**
@@ -102,7 +132,7 @@ public class WordSquare {
         if (word.length == index) {
             return true;
         }
-        if (word[index] == grid[x][y]) {
+        if (grid[x][y] != null && word[index] == grid[x][y]) {
             return
                     // above
                     (y > 0 && isWordPresentFrom(word, index + 1, x, y -1)) ||
@@ -134,5 +164,26 @@ public class WordSquare {
 
     public void print() {
         System.out.println(toString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WordSquare that = (WordSquare) o;
+
+        if (width != that.width) return false;
+        if (height != that.height) return false;
+        return Arrays.deepEquals(grid, that.grid);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = width;
+        result = 31 * result + height;
+        result = 31 * result + Arrays.deepHashCode(grid);
+        return result;
     }
 }

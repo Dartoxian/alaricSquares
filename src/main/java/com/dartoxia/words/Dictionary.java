@@ -1,15 +1,17 @@
 package com.dartoxia.words;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bgazzard on 10/01/2017.
  */
-public class Dictionary {
+public class Dictionary implements Iterable<char[]>{
 
-    public static final List<char[]> words = ImmutableList.<char[]>builder()
+    public static final List<char[]> greekAlphabet = ImmutableList.<char[]>builder()
             .add("alpha".toCharArray())
             .add("beta".toCharArray())
             .add("gamma".toCharArray())
@@ -36,4 +38,28 @@ public class Dictionary {
             .add("omega".toCharArray())
             .build();
 
+    private Set<char[]> words;
+
+    public Dictionary(Collection<char[]> words) {
+        this.words = Sets.newHashSet(words);
+    }
+
+    public Dictionary getDictionaryWithoutWords(final Set<char[]> bannedWords) {
+        return new Dictionary(Sets.filter(this.words, new Predicate<char[]>() {
+            @Override
+            public boolean apply(char[] input) {
+                for (char[] word: bannedWords) {
+                    if (new String(input).equals(new String(word))){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }));
+    }
+
+    @Override
+    public Iterator<char[]> iterator() {
+        return words.iterator();
+    }
 }

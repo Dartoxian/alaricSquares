@@ -47,9 +47,9 @@ public class TestWordSquare {
 
         ws.print();
 
-        assertTrue(ws.isComplete(Dictionary.words));
+        assertTrue(ws.isComplete(Dictionary.greekAlphabet));
 
-        List<char[]> invalidDictionary = Lists.newArrayList(Dictionary.words);
+        List<char[]> invalidDictionary = Lists.newArrayList(Dictionary.greekAlphabet);
         invalidDictionary.add("thiswordismissing".toCharArray());
         assertFalse(ws.isComplete(invalidDictionary));
     }
@@ -69,9 +69,9 @@ public class TestWordSquare {
 
         ws.print();
 
-        assertTrue(ws.isComplete(Dictionary.words));
+        assertTrue(ws.isComplete(Dictionary.greekAlphabet));
 
-        List<char[]> invalidDictionary = Lists.newArrayList(Dictionary.words);
+        List<char[]> invalidDictionary = Lists.newArrayList(Dictionary.greekAlphabet);
         invalidDictionary.add("thiswordismissing".toCharArray());
         assertFalse(ws.isComplete(invalidDictionary));
     }
