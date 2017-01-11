@@ -13,6 +13,6 @@ public class TooManyDistinctCharactersEvaluator implements PartialSolutionEvalua
 
     @Override
     public boolean couldWork(PartialSolution ps) {
-        return ps.getRemainingBlankSquares() >= Sets.difference(ps.remainingDictionary.getDistinctCharactersInDictionary(), ps.remainingDictionary.getDistinctCharactersInDictionary()).size();
+        return ps.getRemainingBlankSquares() >= Sets.difference(ps.remainingDictionary.getDistinctCharactersInDictionary(), ps.wordSquare.getDistinctCharacters()).size();
     }
 }

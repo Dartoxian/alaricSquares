@@ -152,7 +152,7 @@ public class WordSquare {
     public Set<Character> getDistinctCharacters() {
         Set<Character> result = Sets.newHashSet();
         for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; i++) {
+            for (int j = 0; j < height; j++) {
                 if (grid[i][j] != null) {
                     result.add(grid[i][j]);
                 }
@@ -192,7 +192,6 @@ public class WordSquare {
         if (width != that.width) return false;
         if (height != that.height) return false;
         return Arrays.deepEquals(grid, that.grid);
-
     }
 
     @Override
