@@ -3,7 +3,7 @@ package com.dartoxia.words.solution;
 import com.dartoxia.words.Dictionary;
 import com.dartoxia.words.WordSquare;
 import com.dartoxia.words.solution.evaluators.ImpossibleScoreEvaluator;
-import com.dartoxia.words.solution.evaluators.KnownImpossiblePartialSolutionEvaluator;
+import com.dartoxia.words.solution.evaluators.OneTimeOnlyPartialSolutionEvaluator;
 import com.dartoxia.words.solution.evaluators.TooManyDistinctCharactersEvaluator;
 import com.google.common.collect.Sets;
 
@@ -24,11 +24,10 @@ public class WordSquareStrategy {
     private List<char[]> dictionary;
     private PriorityQueue<PartialSolution> partialSolutions;
     private Set<PartialSolution> solutionsQueued;
-    private Set<String> exploredStates = Sets.newHashSet();
     private final PartialSolutionEvaluator[] solutionEvaluators = new PartialSolutionEvaluator[] {
             ImpossibleScoreEvaluator.INSTANCE,
             TooManyDistinctCharactersEvaluator.INSTANCE,
-            new KnownImpossiblePartialSolutionEvaluator(exploredStates)
+            OneTimeOnlyPartialSolutionEvaluator.INSTANCE
     };
 
     public WordSquareStrategy(int width, int height, List<char[]> dictionary) {
@@ -44,7 +43,6 @@ public class WordSquareStrategy {
         });
         PartialSolution initialSolution = new PartialSolution(new WordSquare(width, height), new Dictionary(dictionary));
         solutionsQueued = Sets.newHashSet(initialSolution);
-        exploredStates = Sets.newHashSet();
         partialSolutions.add(initialSolution);
     }
 
@@ -53,7 +51,6 @@ public class WordSquareStrategy {
             PartialSolution solutionToWorkOn = partialSolutions.poll();
             solutionsQueued.remove(solutionToWorkOn);
             Set<PartialSolution> nextSolutions = workOnPartialSquare(solutionToWorkOn);
-            exploredStates.add(solutionToWorkOn.stateId());
             partialSolutions.addAll(Sets.difference(nextSolutions, solutionsQueued));
             solutionsQueued.addAll(nextSolutions);
         }
@@ -79,9 +76,6 @@ public class WordSquareStrategy {
      */
     public Set<PartialSolution> workOnPartialSquare(PartialSolution partialSolution) {
         Set<PartialSolution> result = Sets.newHashSet();
-        if (exploredStates.contains(partialSolution.stateId())) {
-            return result;
-        }
 
         char[] word = partialSolution.remainingDictionary.getLongestWord();
         Set<WordSquare> partialSolutionsForWord = Sets.newHashSet();
