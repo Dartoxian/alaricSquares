@@ -102,7 +102,7 @@ public class PartialSolution {
     private String stateIdCache = null;
     public String stateId() {
         if (stateIdCache == null) {
-            stateIdCache = DigestUtils.md5Hex(wordSquare.toString() + remainingDictionary.toString());
+            stateIdCache = DigestUtils.md5Hex(wordSquare.toCanonicalString() + remainingDictionary.toString());
         }
         return stateIdCache;
     }

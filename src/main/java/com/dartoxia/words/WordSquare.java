@@ -185,7 +185,7 @@ public class WordSquare {
 
     public String get90DegreesClockwiseString() {
         if (width != height) {
-            return null;
+            return "";
         }
         Character[][] rotation = new Character[width][height];
         for (int i = 0; i < width; i++) {
@@ -198,7 +198,7 @@ public class WordSquare {
 
     public String get90DegreesAntiClockwiseString() {
         if (width != height) {
-            return null;
+            return "";
         }
         Character[][] rotation = new Character[width][height];
         for (int i = 0; i < width; i++) {
@@ -211,7 +211,7 @@ public class WordSquare {
 
     public String get180DegreeString() {
         if (width != height) {
-            return null;
+            return "";
         }
         Character[][] rotation = new Character[width][height];
         for (int i = 0; i < width; i++) {
@@ -223,6 +223,9 @@ public class WordSquare {
     }
 
     public String getDiagonalString() {
+        if (width != height) {
+            return "";
+        }
         Character[][] mirror = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -233,6 +236,9 @@ public class WordSquare {
     }
 
     public String getMirroredDiagonalString() {
+        if (width != height) {
+            return "";
+        }
         Character[][] mirror = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
