@@ -150,6 +150,18 @@ public class WordSquare {
         return false;
     }
 
+    public int getNumberOf(Character c) {
+        int count = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (grid[i][j] != null && grid[i][j].equals(c)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     public Set<Character> getDistinctCharacters() {
         Set<Character> result = Sets.newHashSet();
         for (int i = 0; i < width; i++) {
