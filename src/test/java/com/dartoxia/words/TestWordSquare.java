@@ -59,12 +59,12 @@ public class TestWordSquare {
         WordSquare ws = new WordSquare(7, 8);
         ws.setGrid(new char[][] {
                 "ppammbda".toCharArray(),
-                "aikyanus".toCharArray(),
+                "aikganuq".toCharArray(),
                 "epsilome".toCharArray(),
-                "aukxphig".toCharArray(),
-                "thactrca".toCharArray(),
+                "auqxphig".toCharArray(),
+                "thachrca".toCharArray(),
                 "zetoionl".toCharArray(),
-                "*bledahp".toCharArray()
+                "qbledahp".toCharArray()
         });
 
         ws.print();
