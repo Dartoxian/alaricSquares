@@ -88,7 +88,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.getVerticalMirrorString();
+        String mirror = ws.getVerticalMirrorString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -108,7 +108,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.getHorizontalMirrorString();
+        String mirror = ws.getHorizontalMirrorString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -128,7 +128,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.get90DegreesClockwiseString();
+        String mirror = ws.get90DegreesClockwiseString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -148,7 +148,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.get90DegreesAntiClockwiseString();
+        String mirror = ws.get90DegreesAntiClockwiseString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -168,7 +168,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.get180DegreeString();
+        String mirror = ws.get180DegreeString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -188,7 +188,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.getDiagonalString();
+        String mirror = ws.getDiagonalString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -208,7 +208,7 @@ public class TestWordSquare {
         });
 
         System.out.println(ws.toString());
-        String mirror = ws.getMirroredDiagonalString();
+        String mirror = ws.getMirroredDiagonalString(new Character[3][3]);
         System.out.println(mirror);
 
         assertEquals(
@@ -229,13 +229,13 @@ public class TestWordSquare {
         });
 
         perms.add(ws.toString());
-        perms.add(ws.get90DegreesAntiClockwiseString());
-        perms.add(ws.get90DegreesClockwiseString());
-        perms.add(ws.getHorizontalMirrorString());
-        perms.add(ws.getVerticalMirrorString());
-        perms.add(ws.get180DegreeString());
-        perms.add(ws.getDiagonalString());
-        perms.add(ws.getMirroredDiagonalString());
+        perms.add(ws.get90DegreesAntiClockwiseString(new Character[3][3]));
+        perms.add(ws.get90DegreesClockwiseString(new Character[3][3]));
+        perms.add(ws.getHorizontalMirrorString(new Character[3][3]));
+        perms.add(ws.getVerticalMirrorString(new Character[3][3]));
+        perms.add(ws.get180DegreeString(new Character[3][3]));
+        perms.add(ws.getDiagonalString(new Character[3][3]));
+        perms.add(ws.getMirroredDiagonalString(new Character[3][3]));
 
         assertEquals(8, perms.size());
     }

@@ -163,8 +163,7 @@ public class WordSquare {
         return result;
     }
 
-    public String getVerticalMirrorString() {
-        Character[][] mirror = new Character[width][height];
+    public String getVerticalMirrorString(Character[][] mirror) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 mirror[i][j] = grid[i][height -1 -j];
@@ -173,8 +172,7 @@ public class WordSquare {
         return toString(mirror);
     }
 
-    public String getHorizontalMirrorString() {
-        Character[][] mirror = new Character[width][height];
+    public String getHorizontalMirrorString(Character[][] mirror) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 mirror[i][j] = grid[width -1 -i][j];
@@ -183,11 +181,10 @@ public class WordSquare {
         return toString(mirror);
     }
 
-    public String get90DegreesClockwiseString() {
+    public String get90DegreesClockwiseString(Character[][] rotation) {
         if (width != height) {
             return "";
         }
-        Character[][] rotation = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 rotation[j][height -1 -i] = grid[i][j];
@@ -196,11 +193,10 @@ public class WordSquare {
         return toString(rotation);
     }
 
-    public String get90DegreesAntiClockwiseString() {
+    public String get90DegreesAntiClockwiseString(Character[][] rotation) {
         if (width != height) {
             return "";
         }
-        Character[][] rotation = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 rotation[width -1 -j][i] = grid[i][j];
@@ -209,11 +205,10 @@ public class WordSquare {
         return toString(rotation);
     }
 
-    public String get180DegreeString() {
+    public String get180DegreeString(Character[][] rotation) {
         if (width != height) {
             return "";
         }
-        Character[][] rotation = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 rotation[width -1 -i][height -1 -j] = grid[i][j];
@@ -222,11 +217,10 @@ public class WordSquare {
         return toString(rotation);
     }
 
-    public String getDiagonalString() {
+    public String getDiagonalString(Character[][] mirror) {
         if (width != height) {
             return "";
         }
-        Character[][] mirror = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 mirror[i][j] = grid[j][i];
@@ -235,11 +229,10 @@ public class WordSquare {
         return toString(mirror);
     }
 
-    public String getMirroredDiagonalString() {
+    public String getMirroredDiagonalString(Character[][] mirror) {
         if (width != height) {
             return "";
         }
-        Character[][] mirror = new Character[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 mirror[i][j] = grid[width -1 - j][height -1 - i];
@@ -287,14 +280,15 @@ public class WordSquare {
      */
     public String toCanonicalString() {
         String[] permutations = new String[8];
+        Character[][] allocatedBoard = new Character[width][height];
         permutations[0] = toString();
-        permutations[1] = getVerticalMirrorString();
-        permutations[2] = getHorizontalMirrorString();
-        permutations[3] = get90DegreesAntiClockwiseString();
-        permutations[4] = get90DegreesClockwiseString();
-        permutations[5] = getDiagonalString();
-        permutations[6] = getMirroredDiagonalString();
-        permutations[7] = get180DegreeString();
+        permutations[1] = getVerticalMirrorString(allocatedBoard);
+        permutations[2] = getHorizontalMirrorString(allocatedBoard);
+        permutations[3] = get90DegreesAntiClockwiseString(allocatedBoard);
+        permutations[4] = get90DegreesClockwiseString(allocatedBoard);
+        permutations[5] = getDiagonalString(allocatedBoard);
+        permutations[6] = getMirroredDiagonalString(allocatedBoard);
+        permutations[7] = get180DegreeString(allocatedBoard);
         Arrays.sort(permutations);
 
         return Joiner.on("\n").join(permutations);

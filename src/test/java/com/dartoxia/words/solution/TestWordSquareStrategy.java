@@ -39,11 +39,12 @@ public class TestWordSquareStrategy {
     }
 
     /**
-     * This grid is too small for the greek alphabet
+     * 5x5 has no solution (at about 1.6Million steps)
+     *
      */
     @Test
     public void testGreekAlphabet() {
-        WordSquare result = new WordSquareStrategy(5,5, Dictionary.greekAlphabet).findSolution();
+        WordSquare result = new WordSquareStrategy(6,6, Dictionary.greekAlphabet).findSolution();
 
         assertTrue(result == null);
     }

@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Try to search the word square space for an x by y word square with the provided dictionary
@@ -52,23 +55,22 @@ public class WordSquareStrategy {
             partialSolutions.addAll(nextSolutions);
         }
 
+        final Lock queueLock = new ReentrantLock(false);
+        final AtomicLong solutionsProcessed = new AtomicLong();
         for (int i = 0; i < 8; i++) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    queueLock.lock();
                     while (partialSolutions.size() > 0 && partialSolutions.peek().score() > 0) {
                         PartialSolution solutionToWorkOn = partialSolutions.poll();
-                        if (solutionToWorkOn == null) {
-                            try {
-                                Thread.sleep(250);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            continue;
-                        }
+                        queueLock.unlock();
+                        solutionsProcessed.incrementAndGet();
                         Set<PartialSolution> nextSolutions = workOnPartialSquare(solutionToWorkOn);
+                        queueLock.lock();
                         partialSolutions.addAll(nextSolutions);
                     }
+                    queueLock.unlock();
                 }
             }, "WorkerThread-"+i).start();
         }
@@ -79,6 +81,7 @@ public class WordSquareStrategy {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.println("Processed "+solutionsProcessed.get()+" steps so far...");
         }
 
         if (partialSolutions.size() > 0) {
