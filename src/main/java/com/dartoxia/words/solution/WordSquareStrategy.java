@@ -50,29 +50,29 @@ public class WordSquareStrategy {
     }
 
     /**
-     * Given a PartialSolution return all possible child solutions. A child solution has a remaining
+     * Given a PartialSolution return all possible child solutions made by inserting the arbitrarily chosen longest word.
+     * A child solution has a remaining
      * dictionary that is at least one smaller.
      *
      * @param partialSolution
      * @return
      */
     public List<PartialSolution> workOnPartialSquare(PartialSolution partialSolution) {
-//        System.out.println("working on partial"); partialSolution.wordSquare.print();
         List<PartialSolution> result = Lists.newArrayList();
 
-        for (char[] word: partialSolution.remainingDictionary) {
-            Set<WordSquare> partialSolutionsForWord = Sets.newHashSet();
-            for (int i = 0; i <  partialSolution.wordSquare.getWidth(); i++) {
-                for (int j = 0; j < partialSolution.wordSquare.getHeight(); j++) {
-                    partialSolutionsForWord.addAll(tryToPlaceWord(partialSolution.wordSquare, word, 0, i, j));
-                }
-            }
-
-            Dictionary dictionaryWithoutWord = partialSolution.remainingDictionary.getDictionaryWithoutWords(Sets.newHashSet(word));
-            for (WordSquare ws : partialSolutionsForWord) {
-                result.add(new PartialSolution(ws, dictionaryWithoutWord));
+        char[] word = partialSolution.remainingDictionary.getLongestWord();
+        Set<WordSquare> partialSolutionsForWord = Sets.newHashSet();
+        for (int i = 0; i <  partialSolution.wordSquare.getWidth(); i++) {
+            for (int j = 0; j < partialSolution.wordSquare.getHeight(); j++) {
+                partialSolutionsForWord.addAll(tryToPlaceWord(partialSolution.wordSquare, word, 0, i, j));
             }
         }
+
+        Dictionary dictionaryWithoutWord = partialSolution.remainingDictionary.getDictionaryWithoutWords(Sets.newHashSet(word));
+        for (WordSquare ws : partialSolutionsForWord) {
+            result.add(new PartialSolution(ws, dictionaryWithoutWord));
+        }
+
         return result;
     }
 

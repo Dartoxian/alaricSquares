@@ -53,4 +53,14 @@ public class TestDictionary {
         }
         assertEquals(1, size);
     }
+
+    @Test
+    public void testLongestWord() {
+        Dictionary d = new Dictionary(Lists.newArrayList(
+                "abc".toCharArray(),
+                "defg".toCharArray()
+        ));
+
+        assertEquals("defg", new String(d.getLongestWord()));
+    }
 }

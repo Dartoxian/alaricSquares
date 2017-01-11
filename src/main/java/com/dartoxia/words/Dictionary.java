@@ -39,9 +39,16 @@ public class Dictionary implements Iterable<char[]>{
             .build();
 
     private Set<char[]> words;
+    private char[] longestWord;
 
     public Dictionary(Collection<char[]> words) {
         this.words = Sets.newHashSet(words);
+        longestWord = new char[0];
+        for (char[] word : words) {
+            if (longestWord.length < word.length) {
+                longestWord = word;
+            }
+        }
     }
 
     public Dictionary getDictionaryWithoutWords(final Set<char[]> bannedWords) {
@@ -61,5 +68,9 @@ public class Dictionary implements Iterable<char[]>{
     @Override
     public Iterator<char[]> iterator() {
         return words.iterator();
+    }
+
+    public char[] getLongestWord() {
+        return longestWord;
     }
 }
