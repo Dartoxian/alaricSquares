@@ -1,7 +1,9 @@
 package com.dartoxia.words;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.*;
@@ -39,19 +41,22 @@ public class Dictionary implements Iterable<char[]>{
             .build();
 
     private Set<char[]> words;
-    private Set<String> wordsAsStrings;
+    private String[] wordsAsStrings;
     private char[] longestWord;
 
     public Dictionary(Collection<char[]> words) {
         this.words = Sets.newHashSet(words);
-        this.wordsAsStrings = Sets.newHashSet();
+        this.wordsAsStrings = new String[words.size()];
         longestWord = new char[0];
+        int i =0;
         for (char[] word : words) {
             if (longestWord.length < word.length) {
                 longestWord = word;
             }
-            wordsAsStrings.add(new String(word));
+            wordsAsStrings[i] = new String(word);
+            i++;
         }
+        Arrays.sort(wordsAsStrings);
     }
 
     public Dictionary getDictionaryWithoutWords(final Set<char[]> bannedWords) {
@@ -116,12 +121,20 @@ public class Dictionary implements Iterable<char[]>{
 
         Dictionary chars = (Dictionary) o;
 
-        return wordsAsStrings != null ? wordsAsStrings.equals(chars.wordsAsStrings) : chars.wordsAsStrings == null;
+        return wordsAsStrings != null ? Lists.newArrayList(wordsAsStrings).equals(Lists.newArrayList(chars.wordsAsStrings)) : chars.wordsAsStrings == null;
 
     }
 
     @Override
     public int hashCode() {
         return wordsAsStrings != null ? wordsAsStrings.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder('[');
+        sb.append(Joiner.on(',').join(wordsAsStrings));
+        sb.append(']');
+        return sb.toString();
     }
 }

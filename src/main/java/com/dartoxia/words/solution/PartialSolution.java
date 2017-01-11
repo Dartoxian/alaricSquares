@@ -3,6 +3,7 @@ package com.dartoxia.words.solution;
 import com.dartoxia.words.Dictionary;
 import com.dartoxia.words.WordSquare;
 import com.google.common.collect.Sets;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.Set;
 
@@ -96,5 +97,13 @@ public class PartialSolution {
         int result = wordSquare != null ? wordSquare.hashCode() : 0;
         result = 31 * result + (remainingDictionary != null ? remainingDictionary.hashCode() : 0);
         return result;
+    }
+
+    private String stateIdCache = null;
+    public String stateId() {
+        if (stateIdCache == null) {
+            stateIdCache = DigestUtils.md5Hex(wordSquare.toString() + remainingDictionary.toString());
+        }
+        return stateIdCache;
     }
 }
