@@ -1,5 +1,6 @@
 package com.dartoxia.words;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 
 import java.util.Arrays;
@@ -162,6 +163,85 @@ public class WordSquare {
         return result;
     }
 
+    public String getVerticalMirrorString() {
+        Character[][] mirror = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                mirror[i][j] = grid[i][height -1 -j];
+            }
+        }
+        return toString(mirror);
+    }
+
+    public String getHorizontalMirrorString() {
+        Character[][] mirror = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                mirror[i][j] = grid[width -1 -i][j];
+            }
+        }
+        return toString(mirror);
+    }
+
+    public String get90DegreesClockwiseString() {
+        if (width != height) {
+            return null;
+        }
+        Character[][] rotation = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                rotation[j][height -1 -i] = grid[i][j];
+            }
+        }
+        return toString(rotation);
+    }
+
+    public String get90DegreesAntiClockwiseString() {
+        if (width != height) {
+            return null;
+        }
+        Character[][] rotation = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                rotation[width -1 -j][i] = grid[i][j];
+            }
+        }
+        return toString(rotation);
+    }
+
+    public String get180DegreeString() {
+        if (width != height) {
+            return null;
+        }
+        Character[][] rotation = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                rotation[width -1 -i][height -1 -j] = grid[i][j];
+            }
+        }
+        return toString(rotation);
+    }
+
+    public String getDiagonalString() {
+        Character[][] mirror = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                mirror[i][j] = grid[j][i];
+            }
+        }
+        return toString(mirror);
+    }
+
+    public String getMirroredDiagonalString() {
+        Character[][] mirror = new Character[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                mirror[i][j] = grid[width -1 - j][height -1 - i];
+            }
+        }
+        return toString(mirror);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -178,6 +258,42 @@ public class WordSquare {
         return sb.toString();
     }
 
+    public String toString(Character[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (board[i][j] == null) {
+                    sb.append('*');
+                } else {
+                    sb.append(board[i][j]);
+                }
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+
+    /**
+     * The canonical string for this board is the string containing all possible permutations of this board in sorted order.
+     * This string can be used for equality checks to determine if another board is actually just this one in a meaningless
+     * permutation.
+     * @return
+     */
+    public String toCanonicalString() {
+        String[] permutations = new String[8];
+        permutations[0] = toString();
+        permutations[1] = getVerticalMirrorString();
+        permutations[2] = getHorizontalMirrorString();
+        permutations[3] = get90DegreesAntiClockwiseString();
+        permutations[4] = get90DegreesClockwiseString();
+        permutations[5] = getDiagonalString();
+        permutations[6] = getMirroredDiagonalString();
+        permutations[7] = get180DegreeString();
+        Arrays.sort(permutations);
+
+        return Joiner.on("\n").join(permutations);
+    }
+
     public void print() {
         System.out.println(toString());
     }
@@ -191,14 +307,14 @@ public class WordSquare {
 
         if (width != that.width) return false;
         if (height != that.height) return false;
-        return Arrays.deepEquals(grid, that.grid);
+        return toCanonicalString().equals(that.toCanonicalString());
     }
 
     @Override
     public int hashCode() {
         int result = width;
         result = 31 * result + height;
-        result = 31 * result + Arrays.deepHashCode(grid);
+        result = 31 * result + toCanonicalString().hashCode();
         return result;
     }
 }
