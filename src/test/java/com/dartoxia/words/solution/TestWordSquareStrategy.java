@@ -43,7 +43,7 @@ public class TestWordSquareStrategy {
      */
     @Test
     public void testGreekAlphabet() {
-        WordSquare result = new WordSquareStrategy(7,7, Dictionary.greekAlphabet).findSolution();
+        WordSquare result = new WordSquareStrategy(5,5, Dictionary.greekAlphabet).findSolution();
 
         assertTrue(result == null);
     }

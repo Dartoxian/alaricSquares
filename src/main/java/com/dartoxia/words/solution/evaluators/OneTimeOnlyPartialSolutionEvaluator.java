@@ -15,10 +15,10 @@ public class OneTimeOnlyPartialSolutionEvaluator implements PartialSolutionEvalu
 
     public static final PartialSolutionEvaluator INSTANCE = new OneTimeOnlyPartialSolutionEvaluator();
 
-    private Set<String> exploredPartialIds = Sets.newHashSet();
+    private Set<String> exploredPartialIds = Sets.newConcurrentHashSet();
 
     @Override
-    public boolean couldWork(PartialSolution ps) {
+    public synchronized boolean couldWork(PartialSolution ps) {
         if (exploredPartialIds.contains(ps.stateId())) {
             return false;
         }

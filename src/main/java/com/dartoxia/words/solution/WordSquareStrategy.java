@@ -9,8 +9,8 @@ import com.google.common.collect.Sets;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Try to search the word square space for an x by y word square with the provided dictionary
@@ -22,8 +22,7 @@ public class WordSquareStrategy {
     private int width;
     private int height;
     private List<char[]> dictionary;
-    private PriorityQueue<PartialSolution> partialSolutions;
-    private Set<PartialSolution> solutionsQueued;
+    private PriorityBlockingQueue<PartialSolution> partialSolutions;
     private final PartialSolutionEvaluator[] solutionEvaluators = new PartialSolutionEvaluator[] {
             ImpossibleScoreEvaluator.INSTANCE,
             TooManyDistinctCharactersEvaluator.INSTANCE,
@@ -35,28 +34,55 @@ public class WordSquareStrategy {
         this.height = height;
         this.dictionary = dictionary;
 
-        partialSolutions = new PriorityQueue<>(100, new Comparator<PartialSolution>() {
+        partialSolutions = new PriorityBlockingQueue<>(100, new Comparator<PartialSolution>() {
             @Override
             public int compare(PartialSolution o1, PartialSolution o2) {
                 return o1.score() - o2.score();
             }
         });
         PartialSolution initialSolution = new PartialSolution(new WordSquare(width, height), new Dictionary(dictionary));
-        solutionsQueued = Sets.newHashSet(initialSolution);
         partialSolutions.add(initialSolution);
     }
 
     public WordSquare findSolution() {
-        while (partialSolutions.size() > 0 && partialSolutions.peek().score() > 0) {
+        // Populate the initial queue a bit
+        for (int i = 0; i < 5 && partialSolutions.size() > 0 && partialSolutions.peek().score() > 0; i++) {
             PartialSolution solutionToWorkOn = partialSolutions.poll();
-            solutionsQueued.remove(solutionToWorkOn);
             Set<PartialSolution> nextSolutions = workOnPartialSquare(solutionToWorkOn);
-            partialSolutions.addAll(Sets.difference(nextSolutions, solutionsQueued));
-            solutionsQueued.addAll(nextSolutions);
+            partialSolutions.addAll(nextSolutions);
+        }
+
+        for (int i = 0; i < 8; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (partialSolutions.size() > 0 && partialSolutions.peek().score() > 0) {
+                        PartialSolution solutionToWorkOn = partialSolutions.poll();
+                        if (solutionToWorkOn == null) {
+                            try {
+                                Thread.sleep(250);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            continue;
+                        }
+                        Set<PartialSolution> nextSolutions = workOnPartialSquare(solutionToWorkOn);
+                        partialSolutions.addAll(nextSolutions);
+                    }
+                }
+            }, "WorkerThread-"+i).start();
+        }
+
+        while (partialSolutions.size() > 0 && partialSolutions.peek().score() > 0) {
+            try {
+                Thread.sleep(2500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         if (partialSolutions.size() > 0) {
-            System.out.println("There is a solution with the provided parameters. with score "+partialSolutions.peek().score()+" it is:");
+            System.out.println("There is a solution with the provided parameters. with score " + partialSolutions.peek().score() + " it is:");
             partialSolutions.peek().wordSquare.print();
             return partialSolutions.peek().wordSquare;
         } else {
